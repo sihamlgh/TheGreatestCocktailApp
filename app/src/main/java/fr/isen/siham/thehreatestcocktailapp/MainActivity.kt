@@ -43,6 +43,7 @@ import fr.isen.siham.thehreatestcocktailapp.FavoriteScreen
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
 import android.app.Activity
+import fr.isen.siham.thehreatestcocktailapp.Screens.SearchResultScreen
 
 enum class NavigationItem(
     val title: String,
@@ -113,7 +114,8 @@ class MainActivity : ComponentActivity() {
                                         drinkID = currentDrinkId.value ?: "",
                                         onDrinkLoaded = { id ->
                                             currentDrinkId.value = id
-                                        }
+                                        },
+                                        navController = navController
                                     )
                                     NavigationItem.List ->
                                         CategoriesScreen(
@@ -133,6 +135,15 @@ class MainActivity : ComponentActivity() {
                             DrinksScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 category = category
+                            )
+                        }
+                        composable("search/{query}") { backStackEntry ->
+
+                            val query = backStackEntry.arguments?.getString("query") ?: ""
+
+                            SearchResultScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                searchText = query
                             )
                         }
                     }

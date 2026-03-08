@@ -41,20 +41,23 @@ import coil3.compose.AsyncImage
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.navigation.NavHostController
+import android.net.Uri
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 
 
 data class Ingredient(val ingredient: String, val measure: String)
 
 @Composable
-fun DetailCocktailScreen(
-    modifier: Modifier,
-    drinkID: String,
-    onDrinkLoaded: (String) -> Unit
-) {
+fun DetailCocktailScreen(modifier: Modifier, drinkID: String, onDrinkLoaded: (String) -> Unit, navController: androidx.navigation.NavHostController? = null) {
 
     val drink: MutableState<DrinkModel> = remember {
         mutableStateOf(value = DrinkModel())
     }
+
+    val searchText = remember { mutableStateOf("") }
 
     val ingredients = listOf(
         Ingredient(drink.value.ingredient1 ?: "", drink.value.measure1 ?: ""),
@@ -94,8 +97,40 @@ fun DetailCocktailScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    )
+    {
+        if (navController != null) {
+            OutlinedTextField(
+                value = searchText.value,
+                onValueChange = { searchText.value = it },
+                label = { Text("Search cocktail") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF9C27B0),
+                    unfocusedBorderColor = Color(0xFF9C27B0),
+                    cursorColor = Color(0xFF9C27B0),
+                    focusedLabelColor = Color(0xFF9C27B0),
+                )
+            )
 
+            Button(
+                onClick = {
+                    if (searchText.value.isNotBlank() && navController != null) {
+                        navController.navigate("search/${Uri.encode(searchText.value)}")
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF9C27B0).copy(alpha = 0.3f),
+                    contentColor = Color.White
+                )
+
+            ) {
+                Text("Search")
+            }
+        }
         AsyncImage(
             model = drink.value.imageURL,
             contentDescription = drink.value.name ?: "",

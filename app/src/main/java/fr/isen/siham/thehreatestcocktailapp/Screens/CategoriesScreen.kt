@@ -71,34 +71,24 @@ fun CategoriesScreen(
 
             val name = category.category ?: ""
 
-            Card(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp)
-                    .shadow(10.dp, RoundedCornerShape(25.dp))
+                    .height(120.dp)
+                    .background(
+                        color = Color(0xFF9C27B0).copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(20.dp)
+                    )
                     .clickable {
                         navController.navigate("drinks/${Uri.encode(name)}")
                     },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.3f)
-                ),
+                contentAlignment = Alignment.Center
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .clip(RoundedCornerShape(22.dp))
-                        .background(Color(0xFFEDE7F6)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = name,
-                        fontSize = 20.sp,
-                        color = Color(0xFF4A148C)
-                    )
-                }
+                Text(
+                    text = name,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
             }
         }
     }
